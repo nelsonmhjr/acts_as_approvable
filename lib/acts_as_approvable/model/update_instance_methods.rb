@@ -18,8 +18,8 @@ module ActsAsApprovable
 
       ##
       # Returns true if any notable (eg. not ignored) fields have been changed.
-      def changed_notably?
-        notably_changed.any?
+      def model_changed_notably?
+        model_notably_changed.any?
       end
 
       ##
@@ -27,7 +27,7 @@ module ActsAsApprovable
       # been changed.
       #
       # @return [Array] a list of changed fields.
-      def notably_changed
+      def model_notably_changed
         approvable_fields.select { |field| changed.include?(field) }
       end
 
@@ -39,14 +39,14 @@ module ActsAsApprovable
 
       private
       def approvable_update?
-        approvals_enabled? and approvable_on?(:update) and changed_notably?
+        approvals_enabled? and approvable_on?(:update) and model_changed_notably?
       end
 
       def approvable_update
         changed = {}
         originals = {}
 
-        notably_changed.each do |attr|
+        model_notably_changed.each do |attr|
           original, changed_to = changes[attr]
 
           write_attribute(attr.to_s, original)

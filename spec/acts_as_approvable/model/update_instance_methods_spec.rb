@@ -54,19 +54,19 @@ describe ActsAsApprovable::Model::UpdateInstanceMethods do
     end
   end
 
-  describe '#changed_notably?' do
-    it 'returns true if #notably_changed returns values' do
-      subject.stub(:notably_changed => [1])
-      subject.should be_changed_notably
+  describe '#model_changed_notably?' do
+    it 'returns true if #model_notably_changed returns values' do
+      subject.stub(:model_notably_changed => [1])
+      subject.should be_model_changed_notably
     end
 
-    it 'returns false if #notably_changed does not return values' do
-      subject.stub(:notably_changed => [])
-      subject.should_not be_changed_notably
+    it 'returns false if #model_notably_changed does not return values' do
+      subject.stub(:model_notably_changed => [])
+      subject.should_not be_model_changed_notably
     end
   end
 
-  describe '#notably_changed' do
+  describe '#model_notably_changed' do
     before(:each) do
       subject.title = 'review'
       subject.updated_at += 60
@@ -74,17 +74,17 @@ describe ActsAsApprovable::Model::UpdateInstanceMethods do
 
     it 'includes fields that should be approved' do
       subject.changed.should include('title')
-      subject.notably_changed.should include('title')
+      subject.model_notably_changed.should include('title')
     end
 
     it 'does not include fields that should be ignored' do
       subject.changed.should include('updated_at')
-      subject.notably_changed.should_not include('updated_at')
+      subject.model_notably_changed.should_not include('updated_at')
     end
 
     it 'gets a list of approvable fields from #approvable_fields' do
       subject.should_receive(:approvable_fields).and_return([])
-      subject.notably_changed
+      subject.model_notably_changed
     end
   end
 
